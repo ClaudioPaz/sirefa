@@ -5,12 +5,17 @@
  */
 package dialogspackage;
 
+
+import classpackage.Empleado;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ClaudioPaz
  */
 public class dlgLogin extends javax.swing.JDialog {
 
+    private Empleado empleado; //Para inició de sesión    
     /**
      * Creates new form dialogoLogin
      */
@@ -20,6 +25,14 @@ public class dlgLogin extends javax.swing.JDialog {
         
         this.setLocationRelativeTo(parent);
     }
+    
+    public dlgLogin(java.awt.Frame parent, boolean modal, Empleado empleado) {
+        super(parent, modal);
+        initComponents();
+        
+        this.empleado = empleado;
+        this.setLocationRelativeTo(parent);
+    }    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -34,7 +47,7 @@ public class dlgLogin extends javax.swing.JDialog {
         txtClave = new javax.swing.JPasswordField();
         lblClave = new javax.swing.JLabel();
         btnIngresar = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        txtNombreUsuario = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Inicio de sesión");
@@ -44,10 +57,15 @@ public class dlgLogin extends javax.swing.JDialog {
         lblClave.setText("Clave:");
 
         btnIngresar.setText("Ingresar");
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        btnIngresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                btnIngresarActionPerformed(evt);
+            }
+        });
+
+        txtNombreUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNombreUsuarioActionPerformed(evt);
             }
         });
 
@@ -65,7 +83,7 @@ public class dlgLogin extends javax.swing.JDialog {
                     .addComponent(btnIngresar)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(txtClave, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                        .addComponent(jTextField1)))
+                        .addComponent(txtNombreUsuario)))
                 .addGap(73, 73, 73))
         );
         layout.setVerticalGroup(
@@ -74,7 +92,7 @@ public class dlgLogin extends javax.swing.JDialog {
                 .addGap(38, 38, 38)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombreUsuario)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblClave)
@@ -87,9 +105,39 @@ public class dlgLogin extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtNombreUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreUsuarioActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtNombreUsuarioActionPerformed
+
+    private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
+        
+        String nombreUsuario = this.txtNombreUsuario.getText();
+        String clave = new String(this.txtClave.getPassword());
+        
+        if(nombreUsuario.isEmpty() && clave.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Ingrese su nombre de usuario y clave",
+                    "Inició de sesión", JOptionPane.WARNING_MESSAGE);
+        }
+        else
+        {
+            this.empleado.setNombreDeUsuario(nombreUsuario);
+            this.empleado.setClave(clave);
+            
+            //Inicio de sesión
+            String mensajeError = this.empleado.getEmpleadoDB().iniciarSesion();
+            
+            if(mensajeError == null)
+            {
+                this.setVisible(false);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this, mensajeError,
+                    "Inició de sesión", JOptionPane.WARNING_MESSAGE);                
+            }
+        }
+    }//GEN-LAST:event_btnIngresarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -136,9 +184,9 @@ public class dlgLogin extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIngresar;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblClave;
     private javax.swing.JLabel lblNombreUsuario;
     private javax.swing.JPasswordField txtClave;
+    private javax.swing.JTextField txtNombreUsuario;
     // End of variables declaration//GEN-END:variables
 }

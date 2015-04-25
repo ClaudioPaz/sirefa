@@ -5,34 +5,148 @@
  */
 package sirefa;
 
+import classpackage.Empleado;
+import classpackage.Roles;
+import dialogPackageLuis.dlgEmpleadosPrincipal;
 import dialogspackage.dlgLogin;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.event.MenuEvent;
 
 /**
  *
  * @author ClaudioPaz
  */
-public class frm_VentanaPrincipal extends javax.swing.JFrame {
-
+public class frm_VentanaPrincipal extends javax.swing.JFrame implements ActionListener{
     /**
      * Creates new form frm_VentanaPrincipal
      */
+    
+    private Empleado empleado;
+    
+    /*Menú para administración*/
+    private JMenu menuAdministracion;
+    private JMenuItem subMenuUsuarios;
+    
+    /*Menú para doctores*/
+    private JMenu menuDoctores;
+    
+    /*Menú para pacientes*/
+    private JMenu menuPacientes;
+    
+    /*Menú para farmacia*/
+    private JMenu menuFarmacia;
+    private JMenuItem subMenuInventarioDeMedicamentos;
+    
     public frm_VentanaPrincipal() 
     {
         initComponents();
         
         //Maximizar pantalla
         this.setSize(this.getMaximumSize().width, this.getMaximumSize().height);
+        
+        this.empleado = new Empleado();
+        
+        this.inicializarMenus();
+    }
+    
+    private void inicializarMenus()
+    {
+        Empleado empleado = this.empleado;
+        
+        //Menu y submenús para doctores
+        this.menuDoctores = new JMenu();
+        this.menuDoctores.setText("Doctores");
+        
+        //Menú y submenús para administradores
+        this.subMenuUsuarios = new JMenuItem();
+        this.subMenuUsuarios.setText("Gestión de empleados"); 
+        
+        this.menuAdministracion = new JMenu();
+        this.menuAdministracion.setText("Administración");
+        
+        this.menuAdministracion.add(this.subMenuUsuarios);
+        
+        this.subMenuUsuarios.addActionListener(this);
+        
+        
+        
+        this.menuPacientes = new JMenu();
+        this.menuPacientes.setText("Pacientes");
+        
+        //Menús y submenús para farmacia
+        this.menuFarmacia = new JMenu();
+        this.menuFarmacia.setText("Farmacia");
+        
+        this.subMenuInventarioDeMedicamentos = new JMenuItem();
+        this.subMenuInventarioDeMedicamentos.setText("Inventario de farmacia");  
+        
+        this.menuFarmacia.add(this.subMenuInventarioDeMedicamentos);
+        this.subMenuInventarioDeMedicamentos.addActionListener(this);
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) 
+    {
+        JMenuItem menu = (JMenuItem)e.getSource();
+        
+        switch(menu.getText())
+        {
+            case "Gestión de empleados":
+            {
+                dlgEmpleadosPrincipal dialogo = new dlgEmpleadosPrincipal(this, true);
+                dialogo.setLocationRelativeTo(this);
+                
+                dialogo.setVisible(true);
+                break;
+            }    
+        }
     }
     
     public void showLogin()
     {
-        
-        dlgLogin dialogo = new dlgLogin(this, true);
+        dlgLogin dialogo = new dlgLogin(this, true, this.empleado);
         dialogo.setLocationRelativeTo(this);
         dialogo.setVisible(true);
+        
+        this.crearMenu();
+    }
+    
+    /*
+        Menú que se crea en base a los roles del usuario que
+        acaba de iniciar sesión.
+    */
+    private void crearMenu()
+    {
+        this.empleado.getEmpleadoDB().obtenerRoles();
+        
+        for(Roles rol : this.empleado.getIdRol())
+        {
+            switch(rol.getNombre())
+            {
+                case "Medico":
+                {
+                    this.menuPrincipal.add(this.menuDoctores);                    
+                    this.menuPrincipal.add(this.menuPacientes);    
+                    break;
+                }
+                case "Administrador de sistema":
+                {
+                    this.menuPrincipal.add(this.menuAdministracion);
+                }
+                case "Inventario":
+                {
+                    this.menuPrincipal.add(this.menuFarmacia);
+                    break;
+                }
+            }
+        }
         
     }
 
@@ -49,10 +163,9 @@ public class frm_VentanaPrincipal extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
+        menuPrincipal = new javax.swing.JMenuBar();
+        menuInicio = new javax.swing.JMenu();
+        subMenuCerrarSesion = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -121,22 +234,19 @@ public class frm_VentanaPrincipal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jMenu1.setText("File");
+        menuInicio.setText("Inicio");
 
-        jMenu3.setText("jMenu3");
-        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu3MouseClicked(evt);
+        subMenuCerrarSesion.setText("Salir");
+        subMenuCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subMenuCerrarSesionActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenu3);
+        menuInicio.add(subMenuCerrarSesion);
 
-        jMenuBar1.add(jMenu1);
+        menuPrincipal.add(menuInicio);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
-
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(menuPrincipal);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -152,16 +262,13 @@ public class frm_VentanaPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
-        
-//        Prueba_1 pr = new Prueba_1();
-//        this.setLayout(new BorderLayout());
-//        this.jPanel1.add(pr);
-    }//GEN-LAST:event_jMenu3MouseClicked
-
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.showLogin();
     }//GEN-LAST:event_formWindowOpened
+
+    private void subMenuCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subMenuCerrarSesionActionPerformed
+        
+    }//GEN-LAST:event_subMenuCerrarSesionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -199,13 +306,12 @@ public class frm_VentanaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JMenu menuInicio;
+    private javax.swing.JMenuBar menuPrincipal;
+    private javax.swing.JMenuItem subMenuCerrarSesion;
     // End of variables declaration//GEN-END:variables
 }

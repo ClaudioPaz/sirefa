@@ -31,8 +31,21 @@ public class Conexion
     private static String USER = "root";
     
     //La clave del usuario de la base de datos
-    static final String PASS = "root";
+    static final String PASS = "";
     static final String PASS_CLAUDIO = "root";
+    
+   public Conexion()
+   {
+       try
+       {
+           Class.forName(DRIVER);
+           this.conn = DriverManager.getConnection(HOSTURL, USER, PASS);
+       }
+       catch(Exception e)
+       {
+           System.out.println(e.getMessage());
+       }
+   }    
     
     //Metodo para obtener la conexion con la base de datos
     public static synchronized Connection getConexion() {

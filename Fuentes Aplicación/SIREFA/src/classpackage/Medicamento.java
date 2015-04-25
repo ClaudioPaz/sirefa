@@ -36,6 +36,14 @@ public class Medicamento
         this.medicamentoDB = new MedicamentoDB();
     }    
     
+    public Medicamento(String nombreMedicamento, Tipo_medicamento tipoMedicamento)
+    {
+        this.setNombre(nombreMedicamento);
+        this.tipoMedicamento = tipoMedicamento;
+        
+        this.medicamentoDB = new MedicamentoDB();
+    }
+    
     /**
      * @return the _idMedicamento
      */

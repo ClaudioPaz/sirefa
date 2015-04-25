@@ -1,5 +1,6 @@
 package classpackage;
 
+import classdbpackage.TipoMedicamentoDB_;
 import java.util.Vector;
 
 public class Tipo_medicamento 
@@ -7,16 +8,24 @@ public class Tipo_medicamento
     private int idTipoMedicamento;
     private String _descripcion;
     private Vector<Medicamento> _medicamento = new Vector<Medicamento>();
+    
+    private TipoMedicamentoDB_ tipoMedicamentoDB;
 
     public Tipo_medicamento()
     {
-        
+        this.tipoMedicamentoDB = new TipoMedicamentoDB_();
     }
     
     public Tipo_medicamento(int idTipoMedicamento)
     {
         this.setIdTipo_Medicamento(idTipoMedicamento);
     }
+    
+    public Tipo_medicamento(int idTipoMedicamento, String descripcion)
+    {
+        this.setIdTipo_Medicamento(idTipoMedicamento);
+        this.setDescripcion(descripcion);
+    }    
     
     /**
      * @return the _idTipo_Medicamento
@@ -58,5 +67,25 @@ public class Tipo_medicamento
      */
     public void setMedicamento(Vector<Medicamento> _medicamento) {
         this._medicamento = _medicamento;
+    }
+
+    /**
+     * @return the tipoMedicamentoDB
+     */
+    public TipoMedicamentoDB_ getTipoMedicamentoDB() {
+        return tipoMedicamentoDB;
+    }
+
+    /**
+     * @param tipoMedicamentoDB the tipoMedicamentoDB to set
+     */
+    public void setTipoMedicamentoDB(TipoMedicamentoDB_ tipoMedicamentoDB) {
+        this.tipoMedicamentoDB = tipoMedicamentoDB;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return this.getDescripcion();
     }
 }

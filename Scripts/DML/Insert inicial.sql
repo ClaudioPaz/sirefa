@@ -42,7 +42,7 @@ INSERT INTO TIPO_MEDICAMENTO(descripcion)
 VALUES('Broncodilatadores');
 
 INSERT INTO TIPO_MEDICAMENTO(descripcion)
-VALUES('AExpectorantes');
+VALUES('Axpectorantes');
 
 INSERT INTO TIPO_MEDICAMENTO(descripcion)
 VALUES('Laxantes');

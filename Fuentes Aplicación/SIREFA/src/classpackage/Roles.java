@@ -1,13 +1,40 @@
 package classpackage;
 
+import classdbpackage.RolDB;
 import java.util.Vector;
 
-public class Roles {
-	private int _idRol;
-	private String _nombre;
-	private String _descripcion;
-	private Vector<Privilegios> _idPrivilegio = new Vector<Privilegios>();
-	private Vector<Empleado> _idUsuario = new Vector<Empleado>();
+public class Roles 
+{
+    private int _idRol;
+    private String _nombre;
+    private String _descripcion;
+    private Vector<Privilegios> _idPrivilegio = new Vector<Privilegios>();
+    private Vector<Empleado> _idUsuario = new Vector<Empleado>();
+    
+    private RolDB rolDB;
+        
+    public Roles()
+    {
+        this.rolDB = new RolDB();
+    }
+    
+    public Roles(int idRol, String nombre, String descripcion)
+    {
+        this.setIdRol(idRol);
+        this.setNombre(nombre);
+        this.setDescripcion(descripcion);
+        
+        this.rolDB = new RolDB();
+    }  
+    
+    public Roles(int idRol, String nombre)
+    {
+        this.setIdRol(idRol);
+        this.setNombre(nombre);
+        
+        this.rolDB = new RolDB();
+    }       
+     
 
     /**
      * @return the _idRol
@@ -77,5 +104,11 @@ public class Roles {
      */
     public void setIdUsuario(Vector<Empleado> _idUsuario) {
         this._idUsuario = _idUsuario;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return this.getNombre();
     }
 }
